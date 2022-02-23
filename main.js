@@ -1,14 +1,15 @@
-const form=document.getElementById("form");
-const search=document.getElementById("search");
-const result=document.getElementById("result");
-const more=document.getElementById("more");
+const form=document.getElementById("form");  //Agarro el formulario 
+const search=document.getElementById("search");//Agarro el input dentro del formulario
+const result=document.getElementById("result");//Agarro el result que es todo el div donde van a ir las canciones buscadas
+const more=document.getElementById("more");//Este va a ser el boton de siguiente
 
-const API_URL="https://api.lyrics.ovh";
+const API_URL="https://api.lyrics.ovh";  //le asigo la url de la api a API_URL
 
-const searchSongs=async(value) =>{
-    const res=await fetch(`${API_URL}/suggest/${value}`);
+
+//FUNCION PARA BUSCAR LAS CANCIONES
+const searchSongs=async(value) =>{      //Declaro la funcion asincrona   
+    const res=await fetch(`${API_URL}/suggest/${value}`);   //Hago un fetch desde la url de la API y el suggest es la forma de la api de buscar. 
     const data=await res.json()                  //Como la linea 9 me devuelve una promesa lo paso a json
-    console.log(data)
     showData(data)
 };
 
