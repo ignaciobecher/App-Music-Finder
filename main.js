@@ -26,11 +26,11 @@ const showData=({data,next,prev}) =>{   //cuando pongo el data entre llaves es p
     if(prev || next){
         more.innerHTML=`
         ${
-            prev? `<button class="btn" onclick="getMoreSongs(${prev})">Anterior</button>`:""
+            prev? `<button class="btn" onclick="getMoreSongs('${prev}')">Anterior</button>`:""
         }
 
         ${
-            next? `<button class="btn" onclick="getMoreSongs(${next})">Siguiente</button>`:""
+            next? `<button class="btn" onclick="getMoreSongs('${next}')">Siguiente</button>`:""
         }
         `;
     }else{
@@ -38,9 +38,23 @@ const showData=({data,next,prev}) =>{   //cuando pongo el data entre llaves es p
     }
 };
 
-const getMoreSongs=(URL)=>{};
+const getMoreSongs=async (url)=>{
+    const res=await fetch(`https://cors-anywhere.herokuapp.com/${url}`)
+    const data= await res.json();
+    showData(data)
+};
 
+const getLyrics=async (artist,songtitle) =>{
+    const res=await fetch(`${API_URL}/v1/${artist}/${songtitle}`)
+    const data =await res.json()
 
+    //EXPRESIONES REGULARES: r return value| n new line| g es global
+    const lyrics=data.lyrics.replace(/(\r\n|\r|\n)/g, "<br>")  //return value y new line lo cambio globalmente por br
+    result.innerHTML= `<h2><strong>${artist}</strong>-${songtitle}</h2>
+                        <span>${lyrics}</span>
+                        :`
+    more.innerHTML=""                    
+}
 
 //INIT
 function init(){
@@ -51,6 +65,16 @@ function init(){
             return
         }
         searchSongs(searchValue)
+    })
+
+    result.addEventListener("click",(e)=>{
+        const element=e.target;
+        if(element.nodeName==="BUTTON"){
+            const artist=element.dataset.artist
+            const songtitle=element.dataset.songtitle
+
+            getLyrics(artist,songtitle);
+        }
     })
 }
 
