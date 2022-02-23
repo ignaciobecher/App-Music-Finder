@@ -13,21 +13,32 @@ const searchSongs=async(value) =>{      //Declaro la funcion asincrona
     showData(data)                              //Data van a ser todas las canciones devueltas por la api
 };
 
+
+//FUNCION PARA MOSTRAR LAS CANCIONES EN PANTALLA
+//El next y prev son argumentos que se encuentran en la api
 const showData=({data,next,prev}) =>{   //cuando pongo el data entre llaves es para desestructurarlo
-    result.innerHTML=`                 
+    result.innerHTML=`                 //Al div result le inyecto el html con las canciones
     
-    <ul class="songs">
+    <ul class="songs">                  //Inyecto un ul para las 15 canciones
     ${
-        data.map(song=>`<li><span><strong>${song.artist.name} 
-        </strong>-${song.title}</span><button class="btn" data-artist="${song.artist.name}"
-        data-songtitle="${song.title}">Letra</button></li>`
-        ).join("")
+        data.map(song=>                 //Utilizo  un map para que a todos los data que reciba le aplique las propiedades
+            `<li>                       //Voy a inyectar un li por c/cancion
+    
+            <span>                                      //Uso el span para organizar las canciones en linea
+                <strong>${song.artist.name}</strong>    //Cancion y artista van a ir haciendo enfasis por el strong
+                -${song.title}
+            </span>
+            
+            <button class="btn" data-artist="${song.artist.name}"data-songtitle="${song.title}">Letra   //Boton para verletra
+            </button>
+        
+            </li>`)
+        .join("")  //El join me va a devolver todo como string
     }
-    </ul>
+    </ul> 
     `;
 
-
-    if(prev || next){
+    if(prev || next){   //Si existe prev o next inyecto el boton Anterior o Siguiente
         more.innerHTML=`
         ${
             prev? `<button class="btn" onclick="getMoreSongs('${prev}')">Anterior</button>`:""
@@ -38,19 +49,21 @@ const showData=({data,next,prev}) =>{   //cuando pongo el data entre llaves es p
         }
         `;
     }else{
-        more.innerHTML=""
+        more.innerHTML=""  //sino existe no inyecto nada
     }
 };
 
-const getMoreSongs=async (url)=>{
-    const res=await fetch(`https://cors-anywhere.herokuapp.com/${url}`)
-    const data= await res.json();
-    showData(data)
+//FUNCION PARA TRAER MAS CANCIONES CON EL PROXY
+const getMoreSongs=async (url)=>{           //Declaro funcion asincrona
+    const res=await fetch(`https://cors-anywhere.herokuapp.com/${url}`) //Hago  un fetch desde la url del proxy a usar
+    const data= await res.json();       //A lo que me devuelva el proxy lo paso a json
+    showData(data)              //Muestro lo que trajo
 };
 
-const getLyrics=async (artist,songtitle) =>{
-    const res=await fetch(`${API_URL}/v1/${artist}/${songtitle}`)
-    const data =await res.json()
+//FUNCION PARA VER LAS LETRAS
+const getLyrics=async (artist,songtitle) =>{    //Declaro funcion asincrona
+    const res=await fetch(`${API_URL}/v1/${artist}/${songtitle}`)   //Busco que me traiga con fetch desde la url de la apilas letras de las canciones
+    const data =await res.json()// paso a json lo devuelto
 
     //EXPRESIONES REGULARES: r return value| n new line| g es global
     const lyrics=data.lyrics.replace(/(\r\n|\r|\n)/g, "<br>")  //return value y new line lo cambio globalmente por br
