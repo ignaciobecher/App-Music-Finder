@@ -10,20 +10,23 @@ const API_URL="https://api.lyrics.ovh";  //le asigo la url de la api a API_URL
 const searchSongs=async(value) =>{      //Declaro la funcion asincrona   
     const res=await fetch(`${API_URL}/suggest/${value}`);   //Hago un fetch desde la url de la API y el suggest es la forma de la api de buscar. 
     const data=await res.json()                  //Como la linea 9 me devuelve una promesa lo paso a json
-    showData(data)
+    showData(data)                              //Data van a ser todas las canciones devueltas por la api
 };
 
 const showData=({data,next,prev}) =>{   //cuando pongo el data entre llaves es para desestructurarlo
-    result.innerHTML=`
+    result.innerHTML=`                 
+    
     <ul class="songs">
     ${
-        data.map(song=>`<li><span><strong>${song.artist.name}
+        data.map(song=>`<li><span><strong>${song.artist.name} 
         </strong>-${song.title}</span><button class="btn" data-artist="${song.artist.name}"
         data-songtitle="${song.title}">Letra</button></li>`
         ).join("")
     }
     </ul>
     `;
+
+
     if(prev || next){
         more.innerHTML=`
         ${
